@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   try {
-    const keys = await redis.keys("user:*");
-
+    const keys = await redis.keys("user:*")
+    
     if (keys.length === 0) {
       return NextResponse.json({
         status: 404,
@@ -18,16 +18,19 @@ export async function GET(request: Request) {
       const userData = await redis.hgetall(key);
       users.push(userData);
     }
+    
     return NextResponse.json({
       status: 200,
       statusText: "success",
       data: users,
     });
   } catch (error) {
+    console.log(error);
     return NextResponse.json({
       status: 500,
       statusText: "server error",
       data: [],
     });
+    
   }
 }

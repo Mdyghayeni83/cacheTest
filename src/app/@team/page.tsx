@@ -11,7 +11,8 @@ const getUserToast = {
 
 export default async function Page() {
   const response = await getUsersAction();
-
+  console.log(response);
+  
   return (
     <div>
       <form action={createUserAction} className="m-auto max-w-[680px]">
@@ -43,11 +44,11 @@ export default async function Page() {
           type="submit"
           className="border border-solid border-[#053B48] bg-[#7828C8] text-white text-sm rounded-2xl w-48 py-1 m-4 text-center"
         >
-          {!response.data ? "loading ..." : "fetch"}
+          {!response.status ? "loading ..." : "fetch"}
         </button>
         <br />
         <div className="w-[320px] m-auto mt-8">
-          {response.data?.map((value: User, index: number) => (
+          {response?.data?.map((value: User, index: number) => (
             <div
               className="border flex justify-between items-center gap-4 border-solid border-black px-4 py-1 m-1 text-center rounded-3xl bg-[#E6FAFE]"
               key={value.id.toString() + index.toString()}

@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const request = await req.json();
-    await set(`user:${request.id}`, { ...request });
+    await redis.hset(`user:${request.id}`, { ...request });
 
     return NextResponse.json({
       status: 200,
