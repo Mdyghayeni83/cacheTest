@@ -3,6 +3,7 @@ import { getUsersAction } from "@/actions/users/get-users/getUsersAction";
 import { User } from "@/actions/users/get-users/interface";
 import DeleteButton from "@/components/DeleteButton";
 import ShowToast from "@/components/ShowToast";
+import Input from "@/components/Input"
 
 const getUserToast = {
   success: "Success get users !",
@@ -15,35 +16,16 @@ export default async function Page() {
   return (
     <div>
       <form action={createUserAction} className="m-auto max-w-[680px]">
-        <input
-          type="text"
-          name="firstname"
-          placeholder="firstname"
-          className="border border-solid border-[#27272A] rounded-xl px-3 text-sm py-1 w-48 m-4 text-start"
-        />
-        <input
-          type="text"
-          name="lastname"
-          placeholder="lastname"
-          className="border border-solid border-[#27272A] rounded-xl px-3 text-sm py-1 w-48 m-4 text-start"
-        />
-        <input
-          type="text"
-          name="id"
-          placeholder="unique id"
-          className="border border-solid border-[#27272A] rounded-xl px-3 text-sm py-1 w-48 m-4 text-start"
-        />
-        <input
-          type="text"
-          name="phone"
-          placeholder="phone"
-          className="border border-solid border-[#27272A] rounded-xl px-3 text-sm py-1 w-48 m-4 text-start"
-        />
+        <Input label="firstname" name="firstname"></Input>
+        <Input label="lastname" name="lastname"></Input>
+        <Input label="uniqueid" name="id"></Input>
+        <Input label="phone" name="phone"></Input>
+        
         <button
           type="submit"
           className="border border-solid border-[#053B48] bg-[#7828C8] text-white text-sm rounded-2xl w-48 py-1 m-4 text-center"
         >
-          {!response.data ? "loading ..." : "fetch"}
+          {!response.status ? "loading ..." : "fetch"}
         </button>
         <br />
         <div className="w-[320px] m-auto mt-8">
