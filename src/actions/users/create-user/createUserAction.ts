@@ -12,7 +12,7 @@ export async function createUserAction(formData: FormData) {
       phone: formData.get("phone"),
     };
     const res = await fetch(
-      "http://192.168.16.162:3012/api/users/create-user",
+      "http://localhost:3042/api/users/create-user",
       {
         method: "POST",
         body: JSON.stringify(user),

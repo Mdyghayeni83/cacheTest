@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     console.log(request);
     
 
-    await redis.call('JSON.SET', `user:44`, '$', `{"firstname":"mahdi", "lastname":"gh", "id":"44", "phone":"66"}`);
+    await redis.call('JSON.SET', `user:${request.id}`, '$', `{"firstname":"${request.firstname}", "lastname":"${request.lastname}", "id":"${request.id}", "phone":"${request.phone}"}`);
 
     return NextResponse.json({
       status: 200,
