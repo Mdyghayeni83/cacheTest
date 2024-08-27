@@ -5,7 +5,7 @@ import { GetUserAction } from "./interface";
 
 export async function getUsersAction() {
   try {
-    const res = await fetch("http://192.168.16.162:3012/api/users/get-users", {
+    const res = await fetch("http://192.168.16.162:3014/api/users/get-users", {
       method: "GET",
       next: { tags: ["getUsers"] },
     });
