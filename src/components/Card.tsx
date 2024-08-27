@@ -19,13 +19,11 @@ const AppCard = styled(Card)<CardProps>(({ theme }) => ({
     width: "600px",
     height: "250px",
     borderRadius: "30px",
-    backgroundColor: "rgb(244, 239, 239)",
-    
 }))
 
 export default function MediaCard({children, ...other}: CardProps) {
     return (
-        <AppCard {...other} sx = {{boxShadow:2,margin:"45px 0px"}}>
+        <AppCard {...other} sx = {{boxShadow:2}}>
             {children}
         </AppCard>
     );

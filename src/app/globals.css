@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+body{
+    background-color: rgb(240, 239, 239);
+    padding: 25px 0 ;
+    height: 100vh;
+}
+
