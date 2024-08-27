@@ -12,7 +12,6 @@ const getUserToast = {
 
 export default async function Page() {
   const response = await getUsersAction();
-  console.log(response);
   
   return (
     <div>
@@ -33,9 +32,9 @@ export default async function Page() {
           {response?.data?.map((value: User, index: number) => (
             <div
               className="border flex justify-between items-center gap-4 border-solid border-black px-4 py-1 m-1 text-center rounded-3xl bg-[#E6FAFE]"
-              key={value.id.toString() + index.toString()}
+              key={String(value.id) + index.toString()}
             >
-              <DeleteButton userId={value.id.toString()} />
+              <DeleteButton userId={String(value.id)} />
               <div className="text-sm">
                 {value.firstname + " " + value.lastname}
               </div>

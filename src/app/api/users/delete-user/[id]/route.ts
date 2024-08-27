@@ -20,7 +20,6 @@ export async function DELETE(
 
     const userExists = await redis.exists(userKey);
     if (!userExists) {
-      console.log("success");
 
       return NextResponse.json({
         status: 404,
@@ -37,8 +36,6 @@ export async function DELETE(
       data: [],
     });
   } catch (error) {
-    console.log(params);
-
     return NextResponse.json({
       status: 500,
       statusText: "internal server error",
