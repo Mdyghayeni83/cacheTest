@@ -25,7 +25,6 @@ export async function GET(request: Request) {
       data: users,
     });
   } catch (error) {
-    console.log(error);
     return NextResponse.json({
       status: 500,
       statusText: "server error",

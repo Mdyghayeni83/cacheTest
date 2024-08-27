@@ -10,7 +10,10 @@ import { red } from '@mui/material/colors';
 
 
 const AppInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
-    height: "52px",
+   width : "200px",
+   
+   margin : "10px",
+   height: "52px",
    borderRadius : "25px",
    '& .MuiInputLabel-formControl':{
     color: 'gray'
@@ -25,7 +28,7 @@ export default function BasicTextFields(props:TextFieldProps) {
   return (
     
      
-     <AppInput color="success"   {...props} sx={{
+     <AppInput color="success"  size='small'  {...props} sx={{
         
         ...(props.sx)
      }}>
