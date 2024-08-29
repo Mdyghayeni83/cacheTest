@@ -12,15 +12,15 @@ import { red } from '@mui/material/colors';
 const AppInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
    width : "200px",
    
-   margin : "10px",
+   margin : "0px",
    height: "52px",
-   borderRadius : "25px",
+   
    '& .MuiInputLabel-formControl':{
     color: 'gray'
    },
    
    '& .MuiInputBase-formControl':{
-    borderRadius: '50px'
+    borderRadius: '30px'
    }
   }));
 export default function BasicTextFields(props:TextFieldProps) {
@@ -30,8 +30,8 @@ export default function BasicTextFields(props:TextFieldProps) {
      
      <AppInput color="success"  size='small'  {...props} sx={{
         
-        ...(props.sx)
-     }}>
+      ...(props.sx)
+   }}>
 
      </AppInput>
     

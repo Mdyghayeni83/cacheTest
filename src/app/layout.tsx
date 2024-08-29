@@ -25,7 +25,7 @@ export default function RootLayout({
         <Toaster />
         <Suspense fallback={<>isLoading</>}>
           {children}
-          <div className="haha">{team}</div>
+          {/* <div className="haha">{team}</div> */}
         </Suspense>
       </body>
     </html>

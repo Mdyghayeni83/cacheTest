@@ -9,6 +9,7 @@ import Card from "@/components/Card"
 import { CardActions, CardContent } from "@mui/material";
 import UserTable from "@/components/UserTable";
 import { redis } from "@/lib/redis/config";
+import Link from "next/link";
 
 var reg = /^\d+$/;
 
@@ -36,7 +37,7 @@ export default async function Page() {
                 <Button type="submit" variant="contained" color="success" size="large">{!response.status ? "loading ..." : "login"}</Button>
             </CardActions>
       </Card>
-
+      
       <UserTable data={response.data} >
       
       </UserTable>
