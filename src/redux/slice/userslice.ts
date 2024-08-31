@@ -1,5 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { useState } from 'react';
+
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+
 
 
 interface Addres {
@@ -51,23 +52,19 @@ export const counterSlice = createSlice({
   name: 'counter',
   initialState,
   reducers: {
-   setDatailuser:(state ,action)=>{
-    state.firstname= action.payload;
-    state.lastname= action.payload;
-    state.id= action.payload;
-    state.image= action.payload;
-      state.address.city=action.payload,
-      state.address.province=action.payload
-    state.phone= "";
-   
+   setDatailuser:(state ,action: PayloadAction<User>)=>{
+    
+    state.firstname= action.payload.firstname;
+    state.lastname= action.payload.lastname;
+    state.id= action.payload.id;
+    state.image= action.payload.image;
+    state.address.city=action.payload.address.city,
+    state.address.province=action.payload.address.province
+    state.phone= action.payload.phone;
+    state.tasks = [...state.tasks,...action.payload.tasks]
    }
   },
 })
-
-const [state,setstate] = useState([{
-    city: "",
-        province: ""
-}])
 
 export const {setDatailuser } = counterSlice.actions;
 

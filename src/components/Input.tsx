@@ -23,7 +23,7 @@ const AppInput = styled(TextField)<TextFieldProps>(({ theme }) => ({
     borderRadius: '30px'
    }
   }));
-export default function BasicTextFields(props:TextFieldProps) {
+export default function Input(props:TextFieldProps) {
       
   return (
     
