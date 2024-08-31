@@ -10,6 +10,9 @@ import { CardActions, CardContent } from "@mui/material";
 import UserTable from "@/components/UserTable";
 import { redis } from "@/lib/redis/config";
 import Link from "next/link";
+import { Provider } from 'react-redux';
+import store from '@/redux/store/store';
+
 
 var reg = /^\d+$/;
 
@@ -24,6 +27,8 @@ export default async function Page() {
   
   const response = await getUsersAction();
   return (
+    <Provider store={store}>
+
     <main>
       <form action={createUserAction} className="m-auto max-w-[680px]">
       <Card>
@@ -63,5 +68,6 @@ export default async function Page() {
       <ShowToast status={response.status} text={getUserToast} />
       
     </main>
+    </Provider>
   );
 }
