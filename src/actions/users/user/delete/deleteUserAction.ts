@@ -1,10 +1,11 @@
 "use server";
 
+import { API_ROUTES } from "@/app/api/endpoints";
 import { revalidateTag } from "next/cache";
 
 export async function deleteUserAction(id: string) {
   try {
-    await fetch("http://localhost:3042/api/users/delete-user/" + id, {
+    await fetch(API_ROUTES.users.user.delete(id), {
       method: "DELETE",
     });
     revalidateTag("getUsers");

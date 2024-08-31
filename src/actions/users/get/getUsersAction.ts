@@ -2,10 +2,11 @@
 
 import { AppResponseType } from "@/@types/response";
 import { GetUserAction } from "./interface";
+import { API_ROUTES } from "@/app/api/endpoints";
 
 export async function getUsersAction() {
   try {
-    const res = await fetch("http://localhost:3042/api/users/get-users", {
+    const res = await fetch(API_ROUTES.users.get, {
       method: "GET",
       next: { tags: ["getUsers"] },
     });

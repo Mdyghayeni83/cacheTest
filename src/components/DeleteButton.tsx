@@ -1,8 +1,8 @@
 "use client";
 
-import { deleteUserAction } from "@/actions/users/delete-user/deleteUserAction";
+import { deleteUserAction } from "@/actions/users/user/delete/deleteUserAction";
 import { ButtonHTMLAttributes } from "react";
-import Button from "@/components/Button"
+import Button from "@/components/Button";
 
 interface PropType extends ButtonHTMLAttributes<HTMLButtonElement> {
   userId: string;
@@ -10,7 +10,7 @@ interface PropType extends ButtonHTMLAttributes<HTMLButtonElement> {
 export default function DeleteButton({ userId, ...other }: PropType) {
   return (
     <>
-    {/* <button
+      {/* <button
       className="min-w-[20px] text-xs h-5 p-2 flex justify-center items-center rounded-full bg-[#12A150]"
       onClick={() => deleteUserAction(userId)}
       type="button"
@@ -18,7 +18,13 @@ export default function DeleteButton({ userId, ...other }: PropType) {
     >
       del
     </button> */}
-    <Button children="Delete" variant="contained" size='small' color='error' onClick={() => deleteUserAction(userId)}></Button>
+      <Button
+        children="Delete"
+        variant="contained"
+        size="small"
+        color="error"
+        onClick={() => deleteUserAction(userId)}
+      ></Button>
     </>
   );
 }

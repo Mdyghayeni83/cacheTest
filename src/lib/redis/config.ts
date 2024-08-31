@@ -1,10 +1,16 @@
 import Redis from "ioredis";
 
-export const redis = new Redis(6379, "192.168.16.195", {
-    username:"test",
-    password:"321321",
-    db:1
-});
+const _config = {
+  port: process.env.REDIS_PORT ? +process.env.REDIS_PORT : 6379,
+  host: process.env.REDIS_HOST ?? "http://localhost",
+  options: {
+    username: process.env.REDIS_USERNAME ?? "",
+    password: process.env.REDIS_PASSWORD ?? "",
+    db: process.env.REDIS_DB ? +process.env.REDIS_DB : 0,
+  },
+};
+
+export const redis = new Redis(_config.port, _config.host, _config.options);
 redis.on("error", (error) => {
-    console.log(error);
+  console.log(error);
 });
