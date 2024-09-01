@@ -16,16 +16,26 @@ export async function POST(req: Request) {
 
     const indexList = await redis_list();
 
-    if (!indexList.includes("idx:user")) {
-      await redis_create(
-        "idx:user",
-        "JSON",
-        "user:",
-        "$.firstname as firstname text $.lastname as lastname text $.id as id numeric $.phone as phone text"
-      );
-    } else {
-      console.log("idx:user already exists");
-    }
+    // if (!indexList.includes("idx:user")) {
+    await redis_create(
+      "idx:user",
+      "JSON",
+      "user:",
+      // "$.firstname as firstname text $.lastname as lastname text $.id as id numeric $.phone as phone text"
+      {
+        one: {
+          tow: {
+            three: {
+              type: "numeric",
+            },
+          },
+        },
+      }
+    );
+    // }
+    // else {
+    //   console.log("idx:user already exists");
+    // }
 
     return NextResponse.json({
       status: 200,
