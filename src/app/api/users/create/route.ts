@@ -6,20 +6,26 @@ export async function POST(req: Request) {
   try {
     const request = await req.json();
 
-    await redis.call(
+    const res = await redis.call(
       "JSON.SET",
       `user:${request.id}`,
       "$",
       `{"firstname":"${request.firstname}", "lastname":"${request.lastname}", "id":"${request.id}", "phone":"${request.phone}"}`
-    );  
+    );
+    console.log(res);
 
-    const indexList = await redis_list()
+    const indexList = await redis_list();
 
-    // if (!(indexList as any).includes("idx:user")) {
-    await redis_create("idx:user", "JSON", "user:", "$.firstname as firstname text");
-    // } else {
-    //   console.log("idx:user already exists");
-    // }
+    if (!indexList.includes("idx:user")) {
+      await redis_create(
+        "idx:user",
+        "JSON",
+        "user:",
+        "$.firstname as firstname text $.lastname as lastname text $.id as id numeric $.phone as phone text"
+      );
+    } else {
+      console.log("idx:user already exists");
+    }
 
     return NextResponse.json({
       status: 200,
