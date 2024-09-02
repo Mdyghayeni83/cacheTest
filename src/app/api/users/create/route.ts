@@ -23,13 +23,21 @@ export async function POST(req: Request) {
       "user:",
       // "$.firstname as firstname text $.lastname as lastname text $.id as id numeric $.phone as phone text"
       {
-        one: {
-          tow: {
-            three: {
-              type: "numeric",
+        firstname: "text",
+        lastname: "text",
+        tasks: [
+          {
+            assigned_by: {
+              info: {
+                firstname: "text",
+                lastname: "text",
+                id: "numeric",
+              },
             },
+            summary: "text",
+            tags: ["text"],
           },
-        },
+        ],
       }
     );
     // }

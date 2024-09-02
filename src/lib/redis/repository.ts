@@ -1,71 +1,55 @@
 import { redis } from "./config";
 
-function createSchema(options: ICreateOptions) {
-  const schema: string[] = [];
-  function pushToSchema(key: string[], value: string) {
-    schema.push(`$.${key.join(".")}`, "AS", key.join("_"), value.toUpperCase());
+function createSchema(
+  obj: ICreateOptions,
+  key: string = "$",
+  schema: string[] = []
+) {
+  function createArrayPath(currentPath: string) {
+    return `${currentPath}[*]`;
   }
-  for (const key in options) {
-    if (Object.prototype.hasOwnProperty.call(options, key)) {
-      if (typeof options[key] === "string") {
-        pushToSchema([key], options[key]);
-      } else if (Array.isArray(options[key])) {
-        if (options[key].length > 0) {
-          for (const _key in options[key]) {
-            const _options = options[key];
-            if (Object.prototype.hasOwnProperty.call(_options, _key)) {
-              if (typeof _options[_key] === "string") {
-                pushToSchema([`${_key}[*]`, _key], _options[_key]);
-              } else {
-              }
-            }
-          }
+  for (const [_key, value] of Object.entries(obj)) {
+    const currentPath: string = `${key}.${_key}`;
+    if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+      createSchema(value, currentPath, schema);
+    } else if (Array.isArray(value)) {
+      value.forEach((item, index) => {
+        if (typeof item === "object" && item !== null) {
+          createSchema(item, createArrayPath(currentPath), schema);
+        } else {
+          schema.push(
+            createArrayPath(currentPath),
+            "AS",
+            `${currentPath
+              .slice(2)
+              .replace(/\./g, "_")
+              .replace(/\[\d+\]/g, "")}${index ? "_" + index : ""}`,
+            String(item).toUpperCase()
+          );
         }
-      } else {
-        for (const _key in options[key]) {
-          const _options = options[key];
-          if (Object.prototype.hasOwnProperty.call(_options, _key)) {
-            if (typeof _options[_key] === "string") {
-              pushToSchema([key, _key], _options[_key]);
-            } else if (Array.isArray(_options[_key])) {
-            } else {
-              for (const __key in _options[_key]) {
-                const __options = _options[_key];
-                if (Object.prototype.hasOwnProperty.call(__options, __key)) {
-                  if (typeof __options[__key] === "string") {
-                    pushToSchema([key, _key, __key], __options[__key]);
-                  } else if (Array.isArray(__options[__key])) {
-                  } else {
-                    for (const ___key in __options[__key]) {
-                      const ___options = __options[__key];
-                      if (
-                        Object.prototype.hasOwnProperty.call(___options, ___key)
-                      ) {
-                        if (typeof ___options[___key] === "string") {
-                          pushToSchema(
-                            [key, _key, __key, ___key],
-                            ___options[___key]
-                          );
-                        } else {
-                          return [""];
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      });
+    } else {
+      schema.push(
+        currentPath,
+        "AS",
+        currentPath
+          .slice(2)
+          .replace(/\./g, "_")
+          .replace(/\[\d+\]/g, ""),
+        String(value).toUpperCase()
+      );
     }
   }
-  console.log(schema);
   return schema;
 }
+
 type ISchemaTypes = "text" | "numeric" | "tag";
 interface ICreateOptions {
-  [key: string]: ISchemaTypes | ICreateOptions;
+  [key: string]:
+    | ISchemaTypes
+    | ICreateOptions
+    | ICreateOptions[]
+    | ISchemaTypes[];
 }
 
 /// FT
