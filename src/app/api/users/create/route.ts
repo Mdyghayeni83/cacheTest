@@ -1,28 +1,28 @@
+import { User } from "@/actions/users/create/interface";
 import { redis } from "@/lib/redis/config";
-import { redis_create, redis_list } from "@/lib/redis/repository";
+import { RedisORM } from "@/lib/redis/repository";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
     const request = await req.json();
+    const client = new RedisORM();
 
-    const res = await redis.call(
-      "JSON.SET",
-      `user:${request.id}`,
-      "$",
-      `{"firstname":"${request.firstname}", "lastname":"${request.lastname}", "id":"${request.id}", "phone":"${request.phone}"}`
-    );
-    console.log(res);
-
-    const indexList = await redis_list();
-
-    // if (!indexList.includes("idx:user")) {
-    await redis_create(
-      "idx:user",
-      "JSON",
-      "user:",
-      // "$.firstname as firstname text $.lastname as lastname text $.id as id numeric $.phone as phone text"
-      {
+    // const res = await redis.call(
+    //   "JSON.SET",
+    //   `user:${request.id}`,
+    //   "$",
+    //   `{"firstname":"${request.firstname}", "lastname":"${request.lastname}", "id":"${request.id}", "phone":"${request.phone}"}`
+    // );
+    const res = await client.setJson<User>(`user:${request.id}`, {
+      firstname: request.firstname,
+      lastname: request.lastname,
+      id: request.id,
+      phone: request.phone,
+    });
+    const indexList = await client.getIndexList();
+    if (!indexList.includes("idx:user")) {
+      await client.createIndex("idx:user", "JSON", "user:", {
         firstname: "text",
         lastname: "text",
         tasks: [
@@ -38,12 +38,10 @@ export async function POST(req: Request) {
             tags: ["text"],
           },
         ],
-      }
-    );
-    // }
-    // else {
-    //   console.log("idx:user already exists");
-    // }
+      });
+    } else {
+      console.log("idx:user already exists");
+    }
 
     return NextResponse.json({
       status: 200,

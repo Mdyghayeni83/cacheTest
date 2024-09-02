@@ -1,6 +1,5 @@
 import { User } from "@/actions/users/create/interface";
-import { redis } from "@/lib/redis/config";
-import { redis_json_get_all } from "@/lib/redis/repository";
+import { RedisORM } from "@/lib/redis/repository";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -13,14 +12,9 @@ export async function GET(request: Request) {
     //   });
     // }
 
-    // for (const key of keys) {
-    //   const user = (await redis.call("JSON.GET", key)) as string;
-    //   const _user = JSON.parse(user) as User;
-    //   users.push(_user);
-    // }
-
-    const items = await redis_json_get_all("user:*");
-    const users = items.map((item: string, index) => JSON.parse(item) as User);
+    const client = new RedisORM();
+    const users = await client.getManyJson("user:*");
+    // const users = items.map((item: string, index) => JSON.parse(item) as User);
 
     return NextResponse.json({
       status: 200,

@@ -43,6 +43,131 @@ function createSchema(
   return schema;
 }
 
+export class RedisORM {
+  constructor() {}
+  /// FT
+  // search
+  async search(index: string, query: string, options: string = "") {
+    try {
+      const results = (await redis.call(
+        "FT.SEARCH",
+        index,
+        query,
+        ...options.split(" ")
+      )) as string[];
+      const data: string[] = [];
+      for (let i = 2; i < results.length; i += 2) {
+        const item = results[i][1];
+        data.push(item);
+      }
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // create index
+  async createIndex(
+    index: string,
+    type: "HASH" | "JSON" = "JSON",
+    prefix: string,
+    options: ICreateOptions
+  ): Promise<"OK" | "ERROR"> {
+    const schema = createSchema(options);
+    try {
+      await redis.call(
+        "FT.CREATE",
+        index,
+        "ON",
+        type,
+        "PREFIX",
+        prefix,
+        "SCHEMA",
+        ...schema
+      );
+      return "OK";
+    } catch (error) {
+      console.log(error);
+      return "ERROR";
+    }
+  }
+
+  // list indexes
+  async getIndexList(): Promise<string[]> {
+    try {
+      const list = (await redis.call("FT._LIST")) as string[];
+      return list;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  }
+
+  /// KYES
+  // get keys with pattern
+  async getKeys(pattern: string): Promise<string[]> {
+    try {
+      const keys = (await redis.call("KEYS", pattern)) as string[];
+      return keys;
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  }
+
+  /// ON JSON
+  // get a json
+  async getOneJson(key: string) {
+    try {
+      const item = (await redis.call("JSON.GET", key)) as string;
+      return item;
+    } catch (error) {
+      console.log(error);
+      return "" as string;
+    }
+  }
+
+  // set a json
+  async setJson<T>(
+    key: string,
+    value: T
+  ): Promise<"OK" | "Bad Request" | "ERROR"> {
+    try {
+      let _value: string;
+      if (typeof value === "object") {
+        _value = JSON.stringify(value);
+        await redis.call("JSON.SET", key, "$", _value);
+        return "OK";
+      }
+      return "Bad Request";
+    } catch (error) {
+      console.log(error);
+      return "ERROR";
+    }
+  }
+
+  // get all json with pattern
+  async getManyJson<T>(pattern: string): Promise<T[]> {
+    try {
+      const keys = await this.getKeys(pattern);
+      if (keys.length > 0) {
+        const items: T[] = [];
+        for (const key of keys) {
+          const item = (await redis.call("JSON.GET", key)) as string;
+          items.push(JSON.parse(item));
+        }
+        return items;
+      }
+      return [];
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  }
+
+  /// ON HASH
+}
+
 type ISchemaTypes = "text" | "numeric" | "tag";
 interface ICreateOptions {
   [key: string]:
@@ -51,121 +176,3 @@ interface ICreateOptions {
     | ICreateOptions[]
     | ISchemaTypes[];
 }
-
-/// FT
-// search
-export async function redis_search(
-  index: string,
-  query: string,
-  options: string = ""
-) {
-  try {
-    const results = (await redis.call(
-      "FT.SEARCH",
-      index,
-      query,
-      ...options.split(" ")
-    )) as string[];
-    const data: string[] = [];
-    for (let i = 2; i < results.length; i += 2) {
-      const item = results[i][1];
-      data.push(item);
-    }
-    return data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-// create index
-export async function redis_create(
-  index: string,
-  type: "HASH" | "JSON" = "JSON",
-  prefix: string,
-  options: ICreateOptions
-) {
-  const schema = createSchema(options);
-  try {
-    await redis.call(
-      "FT.CREATE",
-      index,
-      "ON",
-      type,
-      "PREFIX",
-      prefix,
-      "SCHEMA",
-      ...schema
-    );
-    return "OK";
-  } catch (error) {
-    console.log(error);
-    return "ERROR";
-  }
-}
-
-// list indexes
-export async function redis_list() {
-  try {
-    const list = (await redis.call("FT._LIST")) as string[];
-    return list;
-  } catch (error) {
-    console.log(error);
-    return [] as string[];
-  }
-}
-
-/// KYES
-// get keys with pattern
-export async function redis_keys(pattern: string) {
-  try {
-    const keys = (await redis.call("KEYS", pattern)) as string[];
-    return keys;
-  } catch (error) {
-    console.log(error);
-    return [] as string[];
-  }
-}
-
-/// ON JSON
-// get a json
-export async function redis_json_get(key: string) {
-  try {
-    const item = (await redis.call("JSON.GET", key)) as string;
-    return item;
-  } catch (error) {
-    console.log(error);
-    return "" as string;
-  }
-}
-
-// set a json
-export async function redis_json_set(key: string, value: string) {
-  try {
-    await redis.call("JSON.SET", key, "$", value);
-    return "OK";
-  } catch (error) {
-    console.log(error);
-    return "ERROR";
-  }
-}
-
-// get all json with pattern
-export async function redis_json_get_all(pattern: string) {
-  try {
-    const keys = await redis_keys(pattern);
-    if (keys.length > 0) {
-      const items: string[] = [];
-      for (const key of keys) {
-        const item = (await redis.call("JSON.GET", key)) as string;
-        items.push(item);
-      }
-      return items;
-    }
-    return [] as string[];
-  } catch (error) {
-    console.log(error);
-    return [] as string[];
-  }
-}
-
-/// ON HASH
